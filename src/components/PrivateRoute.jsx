@@ -1,14 +1,16 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute = ({ children }) => {
-  const { user } = useAuth();
+  // Verifica si el usuario está autenticado (puedes usar tu lógica real aquí)
+  const isAuthenticated = localStorage.getItem('token'); // O cualquier lógica para verificar autenticación.
 
-  if (!user) {
-    return <Navigate to="/auth/login" />;
+  // Si no está autenticado, redirige a la página de login
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
   }
 
+  // Si está autenticado, renderiza el contenido (hijos)
   return children;
 };
 

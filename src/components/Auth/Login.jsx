@@ -2,24 +2,27 @@ import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from "jwt-decode"; // Para decodificar el token JWT
+import { jwtDecode } from 'jwt-decode'; // Para decodificar el token JWT
 
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-
+  
   const responseGoogle = (response) => {
-    console.log(response); // Verifica la estructura de la respuesta en la consola
+    console.log("Token recibido:", response);
+    try {
+      const decodedToken = jwtDecode(response.credential);
+      console.log("Token decodificado:", decodedToken);
 
-    // Decodifica el token JWT para obtener la información del usuario
-    const decodedToken = jwtDecode(response.credential);
-    const email = decodedToken.email;
-
-    if (email) {
-      login({ email }); // Guarda el correo en el contexto de autenticación
-      navigate('/dashboard'); // Redirige al dashboard
-    } else {
-      console.error('No se pudo obtener el correo electrónico del token de Google');
+      const { email, name, picture } = decodedToken;
+      if (email) {
+        login({ email, name, picture });
+        navigate('/dashboard'); // Redirige a dashboard
+      } else {
+        console.error('No se pudo obtener el correo electrónico del token de Google');
+      }
+    } catch (error) {
+      console.error('Error al decodificar el token:', error);
     }
   };
 

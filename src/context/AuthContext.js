@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
@@ -7,10 +7,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
+    console.log("Usuario autenticado:", userData);
   };
 
   const logout = () => {
     setUser(null);
+    console.log("Usuario cerrado sesión");
   };
 
   return (
@@ -20,7 +22,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook personalizado para usar AuthContext
 export const useAuth = () => useContext(AuthContext);
-
-export default AuthContext;
