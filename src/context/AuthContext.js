@@ -1,18 +1,26 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  // Recuperar usuario de localStorage al cargar
+  useEffect(() => {
+    const storedUser = localStorage.getItem('googleUser');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   const login = (userData) => {
+    localStorage.setItem('googleUser', JSON.stringify(userData));
     setUser(userData);
-    console.log("Usuario autenticado:", userData);
   };
 
   const logout = () => {
+    localStorage.removeItem('googleUser');
     setUser(null);
-    console.log("Usuario cerrado sesión");
   };
 
   return (

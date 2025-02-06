@@ -2,27 +2,32 @@ import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Para decodificar el token JWT
+import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   
-  const responseGoogle = (response) => {
-    console.log("Token recibido:", response);
+  const handleSuccess = (response) => {
     try {
-      const decodedToken = jwtDecode(response.credential);
-      console.log("Token decodificado:", decodedToken);
-
-      const { email, name, picture } = decodedToken;
-      if (email) {
-        login({ email, name, picture });
-        navigate('/dashboard'); // Redirige a dashboard
-      } else {
-        console.error('No se pudo obtener el correo electrónico del token de Google');
-      }
+      const decoded = jwtDecode(response.credential);
+      const userData = {
+        email: decoded.email,
+        name: decoded.name,
+        picture: decoded.picture,
+        token: response.credential // Guardar token completo si lo necesitas para API
+      };
+      
+      login(userData);
+      navigate('/dashboard');
+      //lo siguiente es para comfanorte
+      // Opcional: Redirigir a página anterior o ruta protegida
+      // const from = location.state?.from?.pathname || '/dashboard';
+      // navigate(from, { replace: true });
+      
     } catch (error) {
-      console.error('Error al decodificar el token:', error);
+      console.error('Error procesando login:', error);
+      // Manejar error adecuadamente
     }
   };
 
@@ -32,8 +37,10 @@ const Login = () => {
         <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
         <div className="mt-6">
           <GoogleLogin
-            onSuccess={responseGoogle}
-            onError={() => console.log('Error al iniciar sesión con Google')}
+            onSuccess={handleSuccess}
+            onError={() => console.log('Error en autenticación de Google')}
+            useOneTap // Opcional: Activar one-tap login
+            auto_select // Opcional: Selección automática de cuenta
           />
         </div>
       </div>

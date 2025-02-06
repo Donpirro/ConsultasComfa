@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { buscarEmpresaPorNIT, obtenerTodasLasEmpresas } from '../services/empresaService';
+import { buscarEmpresaPorNIT } from '../services/empresaService';
 
 const EmpresaComponent = () => {
   const [nit, setNit] = useState('');
   const [empresa, setEmpresa] = useState(null);
-  const [empresas, setEmpresas] = useState([]);
   const [error, setError] = useState('');
 
   const handleBuscarEmpresa = async () => {
@@ -17,19 +16,6 @@ const EmpresaComponent = () => {
       console.error('Error al buscar empresa:', err);
       setError('Empresa no encontrada');
       setEmpresa(null);
-    }
-  };
-
-  const handleObtenerEmpresas = async () => {
-    try {
-      const todasLasEmpresas = await obtenerTodasLasEmpresas();
-      console.log('📌 Empresas obtenidas:', todasLasEmpresas);
-      setEmpresas(Array.isArray(todasLasEmpresas) ? todasLasEmpresas : []);
-      setError('');
-    } catch (err) {
-      console.error('Error al obtener las empresas:', err);
-      setError('Error al obtener las empresas');
-      setEmpresas([]);
     }
   };
 
@@ -62,26 +48,7 @@ const EmpresaComponent = () => {
         </div>
       )}
 
-      <div className="mt-6">
-        <button
-          onClick={handleObtenerEmpresas}
-          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition"
-        >
-          Obtener Todas las Empresas
-        </button>
-
-        <ul className="mt-4">
-          {empresas.length > 0 ? (
-            empresas.map((empresa) => (
-              <li key={empresa.NitCorrecto}>
-                {empresa.Empresa} - {empresa.NitCorrecto}
-              </li>
-            ))
-          ) : (
-            <p>No hay empresas registradas.</p>
-          )}
-        </ul>
-      </div>
+      
     </div>
   );
 };

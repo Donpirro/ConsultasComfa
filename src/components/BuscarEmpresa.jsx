@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { buscarEmpresaPorNIT } from '../services/empresaService';
 
 const BuscarEmpresa = () => {
   const [nit, setNit] = useState('');
@@ -21,15 +21,11 @@ const BuscarEmpresa = () => {
 
     setLoading(true);
     try {
-      const response = await axios.get(`/api/empresa/${nit}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      setEmpresa(response.data);
+      // Usar el servicio en lugar de axios directo
+      const empresaEncontrada = await buscarEmpresaPorNIT(nit);
+      setEmpresa(empresaEncontrada);
     } catch (error) {
-      console.error('Error al buscar la empresa:', error);
-      setError(error.response?.data?.message || 'Error al buscar la empresa');
+      setError(error.message); // Usar el mensaje del error lanzado por el servicio
     } finally {
       setLoading(false);
     }
