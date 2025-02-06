@@ -44,9 +44,14 @@ const EmpresaComponent = () => {
       {empresa && (
         <div className="p-4 bg-white rounded-lg shadow-md">
           <h2 className="text-xl font-bold">{empresa.Empresa}</h2>
-          <p>NIT: {empresa.NitCorrecto || 'No disponible'}</p>
+          <p><strong>NIT:</strong> {empresa.NitCorrecto || 'No disponible'}</p>
+          <p><strong>Estado:</strong> {empresa.Estado || 'No disponible'}</p>
+          <p><strong>Representante Legal:</strong> {empresa.RepresentanteLegal || 'No disponible'}</p>
+          <p><strong>Teléfono:</strong> {empresa.Telefono || 'No disponible'}</p>
+          <p><strong>Correo:</strong> {empresa.Correo || 'No disponible'}</p>
+          <p><strong>Observaciones:</strong> {empresa.Observaciones || 'No disponible'}</p>
         </div>
-      )}
+  )}
 
       
     </div>
